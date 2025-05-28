@@ -81,10 +81,6 @@ const AdminLayout = () => {
             <div className="logo-icon">
               <img src="/src/assets/logo.png" alt="Jobs Logo" />
             </div>
-            <div className="logo-text">
-              <span className="logo-title">Admin</span>
-              <span className="logo-subtitle">Administrator</span>
-            </div>
           </div>
         </div>
 
