@@ -60,25 +60,26 @@ function App() {
   return (
     <>
       <Routes>
+        {/* Login route - only show if not authenticated */}
         <Route
           path="/login"
           element={
             !isAuthenticated ? <Login /> : <Navigate to="/dashboard" replace />
           }
         />
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? <AdminLayout /> : <Navigate to="/login" replace />
-          }
-        >
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="jobs" element={<Jobs />} />
-          <Route path="applications" element={<Applications />} />
-          <Route path="candidates" element={<Candidates />} />
-        </Route>
-        {/* Catch all route */}
+
+        {/* Protected routes - only show if authenticated */}
+        {isAuthenticated ? (
+          <Route path="/" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="jobs" element={<Jobs />} />
+            <Route path="applications" element={<Applications />} />
+            <Route path="candidates" element={<Candidates />} />
+          </Route>
+        ) : null}
+
+        {/* Catch all route - redirect based on auth status */}
         <Route
           path="*"
           element={

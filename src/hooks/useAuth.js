@@ -49,12 +49,12 @@ export const useAuth = () => {
   }, []);
 
   const logout = useCallback(() => {
+    console.log("Logout function called");
     Cookies.remove("user_token");
     Cookies.remove("refresh_token");
     setIsAuthenticated(false);
     // Dispatch custom event to notify other components
     window.dispatchEvent(new Event("authChange"));
-    window.location.href = "/login";
   }, []);
 
   const forceAuthCheck = useCallback(() => {

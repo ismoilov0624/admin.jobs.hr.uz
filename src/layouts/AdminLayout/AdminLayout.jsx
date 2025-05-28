@@ -1,5 +1,5 @@
 "use client";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Briefcase,
@@ -8,12 +8,14 @@ import {
   LogOut,
   User,
 } from "lucide-react";
+import { toast } from "react-toastify";
 import { useAuth } from "../../hooks/useAuth";
 import "./AdminLayout.scss";
 
 const AdminLayout = () => {
   const { logout, isAuthenticated } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // If not authenticated, don't render the layout
   if (!isAuthenticated) {
@@ -52,7 +54,18 @@ const AdminLayout = () => {
 
   const handleLogout = () => {
     if (window.confirm("Tizimdan chiqishni xohlaysizmi?")) {
+      console.log("User confirmed logout");
       logout();
+
+      toast.success("Tizimdan muvaffaqiyatli chiqdingiz!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+
+      // Navigate to login page using React Router
+      setTimeout(() => {
+        navigate("/login", { replace: true });
+      }, 100);
     }
   };
 
