@@ -1,8 +1,10 @@
+"use client";
+
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { request } from "../../../config/request";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 
 const loginAdmin = async (credentials) => {
   const response = await request.post("/auth/admin/login", credentials);
@@ -11,22 +13,25 @@ const loginAdmin = async (credentials) => {
 
 export const useLogin = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   return useMutation({
     mutationFn: loginAdmin,
     onSuccess: (data) => {
-      // Save tokens to cookies
-      Cookies.set("user_token", data.data.accessToken, { expires: 1 });
-      Cookies.set("refresh_token", data.data.refreshToken, { expires: 7 });
+      console.log("Login successful:", data);
+
+      // Use the login function from useAuth hook
+      login(data.data.accessToken, data.data.refreshToken);
 
       toast.success("Muvaffaqiyatli kirildi!", {
         position: "top-right",
+        autoClose: 3000,
       });
 
-      // Force page reload to update auth state
+      // Use React Router navigation instead of window.location
       setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 1000);
+        navigate("/dashboard", { replace: true });
+      }, 500);
     },
     onError: (error) => {
       console.error("Login error:", error);

@@ -13,6 +13,13 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   const { isAuthenticated, isLoading } = useAuth();
 
+  console.log(
+    "App render - isAuthenticated:",
+    isAuthenticated,
+    "isLoading:",
+    isLoading
+  );
+
   // Show loading spinner while checking authentication
   if (isLoading) {
     return (
@@ -23,9 +30,29 @@ function App() {
           alignItems: "center",
           height: "100vh",
           fontSize: "18px",
+          flexDirection: "column",
+          gap: "16px",
         }}
       >
-        Yuklanmoqda...
+        <div
+          style={{
+            width: "40px",
+            height: "40px",
+            border: "3px solid #f3f4f6",
+            borderTop: "3px solid #6366f1",
+            borderRadius: "50%",
+            animation: "spin 1s linear infinite",
+          }}
+        />
+        <p>Yuklanmoqda...</p>
+        <style>
+          {`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
       </div>
     );
   }

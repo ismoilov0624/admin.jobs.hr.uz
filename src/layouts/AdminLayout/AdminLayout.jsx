@@ -12,8 +12,13 @@ import { useAuth } from "../../hooks/useAuth";
 import "./AdminLayout.scss";
 
 const AdminLayout = () => {
-  const { logout } = useAuth();
+  const { logout, isAuthenticated } = useAuth();
   const location = useLocation();
+
+  // If not authenticated, don't render the layout
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const menuItems = [
     {
@@ -43,6 +48,16 @@ const AdminLayout = () => {
       (item) => item.path === location.pathname
     );
     return currentItem?.label || "Dashboard";
+  };
+
+  const handleLogout = () => {
+    if (window.confirm("Tizimdan chiqishni xohlaysizmi?")) {
+      logout();
+    }
+  };
+
+  const handleUserProfileClick = () => {
+    handleLogout();
   };
 
   return (
@@ -79,7 +94,7 @@ const AdminLayout = () => {
         </nav>
 
         <div className="sidebar-footer">
-          <button onClick={logout} className="logout-btn">
+          <button onClick={handleLogout} className="logout-btn">
             <LogOut size={20} />
             <span>Chiqish</span>
           </button>
@@ -92,7 +107,7 @@ const AdminLayout = () => {
             <h1 className="page-title">{getPageTitle()}</h1>
           </div>
           <div className="header-right">
-            <div className="user-profile">
+            <div className="user-profile" onClick={handleUserProfileClick}>
               <div className="user-avatar">
                 <User size={20} />
               </div>
