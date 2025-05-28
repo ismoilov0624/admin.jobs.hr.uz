@@ -1,0 +1,117 @@
+.delete-modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 24px 0 24px;
+
+    .warning-icon {
+      width: 48px;
+      height: 48px;
+      background: #fef2f2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #dc2626;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #f1f5f9;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover:not(:disabled) {
+        background: #e2e8f0;
+        color: #374151;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 16px 24px 24px;
+    text-align: center;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0 0 12px 0;
+    }
+
+    p {
+      color: #64748b;
+      margin: 0 0 8px 0;
+      line-height: 1.5;
+
+      strong {
+        color: #1e293b;
+      }
+    }
+
+    .warning-text {
+      font-size: 14px;
+      color: #dc2626;
+      font-weight: 500;
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+    padding: 0 24px 24px;
+
+    .cancel-btn,
+    .delete-btn {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+
+    .cancel-btn {
+      background: #f1f5f9;
+      color: #64748b;
+
+      &:hover:not(:disabled) {
+        background: #e2e8f0;
+      }
+    }
+
+    .delete-btn {
+      background: #dc2626;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background: #b91c1c;
+      }
+    }
+  }
+}
