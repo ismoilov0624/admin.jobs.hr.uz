@@ -1,61 +1,48 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { request } from "../../../config/request";
-import Cookies from "js-cookie";
 
 const createJob = async (jobData) => {
   try {
     console.log("=== CREATE JOB DEBUG ===");
-    console.log("1. Original job data:", jobData);
+    console.log("1. Job data:", jobData);
 
-    // Check if token exists
-    const token = Cookies.get("user_token");
-    console.log("2. Token exists:", !!token);
-    console.log(
-      "3. Token value:",
-      token ? `${token.substring(0, 20)}...` : "No token"
-    );
+    // Create FormData for file upload
+    const formData = new FormData();
 
-    // Ensure all required fields are present and properly formatted
-    const formattedData = {
-      title: jobData.title,
-      salary: Number(jobData.salary),
-      type: jobData.type,
-      workSchedule: jobData.workSchedule,
-      workLocation: jobData.workLocation,
-      gender: jobData.gender,
-      startDate: jobData.startDate,
-      endDate: jobData.endDate,
-      description: jobData.description,
-      requirements: jobData.requirements,
-      responsibilities: jobData.responsibilities,
-      conditions: jobData.conditions,
-      status: jobData.status || "ACTIVE",
-      speciality: jobData.speciality || "",
-      department: jobData.department || "",
-      position: jobData.position || "",
-    };
+    // Append all job fields to FormData
+    Object.keys(jobData).forEach((key) => {
+      if (
+        jobData[key] !== undefined &&
+        jobData[key] !== null &&
+        jobData[key] !== ""
+      ) {
+        if (key === "avatar" && jobData[key] instanceof File) {
+          formData.append(key, jobData[key]);
+        } else {
+          formData.append(key, String(jobData[key]));
+        }
+      }
+    });
 
-    console.log("4. Formatted job data:", formattedData);
-    console.log("5. Request URL:", request.defaults.baseURL + "/jobs");
+    console.log("2. FormData entries:");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
 
-    const response = await request.post("/jobs", formattedData, {
+    const response = await request.post("/jobs", formData, {
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     });
 
-    console.log("6. Create job response:", response.data);
-    console.log("7. Response status:", response.status);
+    console.log("3. Create job response:", response.data);
     return response.data;
   } catch (error) {
     console.error("=== CREATE JOB ERROR ===");
-    console.error("Error object:", error);
+    console.error("Error:", error);
     console.error("Error response:", error.response?.data);
     console.error("Error status:", error.response?.status);
-    console.error("Error headers:", error.response?.headers);
-    console.error("Request config:", error.config);
     throw error;
   }
 };
@@ -66,8 +53,7 @@ export const useCreateJob = () => {
   return useMutation({
     mutationFn: createJob,
     onSuccess: (data) => {
-      console.log("=== CREATE JOB SUCCESS ===");
-      console.log("Success data:", data);
+      console.log("Job created successfully:", data);
       // Refetch jobs list
       queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
 
@@ -77,36 +63,21 @@ export const useCreateJob = () => {
       });
     },
     onError: (error) => {
-      console.error("=== CREATE JOB MUTATION ERROR ===");
-      console.error("Mutation error:", error);
+      console.error("Create job error:", error);
 
       let errorMessage = "Noma'lum xatolik yuz berdi";
 
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
-      } else if (error.response?.data?.error) {
-        errorMessage = error.response.data.error;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-
-      // Handle specific error cases
-      if (error.response?.status === 401) {
-        errorMessage =
-          "Avtorizatsiya xatosi. Token noto'g'ri yoki muddati tugagan.";
+      } else if (error.response?.status === 401) {
+        errorMessage = "Avtorizatsiya xatosi. Iltimos, qayta kiring.";
       } else if (error.response?.status === 403) {
         errorMessage = "Sizda ish o'rni yaratish huquqi yo'q.";
       } else if (error.response?.status === 400) {
-        errorMessage =
-          "Ma'lumotlar noto'g'ri. Iltimos, barcha maydonlarni to'g'ri to'ldiring.";
-      } else if (error.response?.status === 422) {
-        errorMessage =
-          "Validatsiya xatosi. Ba'zi maydonlar noto'g'ri to'ldirilgan.";
-      } else if (error.code === "NETWORK_ERROR") {
-        errorMessage = "Tarmoq xatosi. Internet ulanishini tekshiring.";
+        errorMessage = "Ma'lumotlar noto'g'ri yoki to'liq emas.";
       }
 
-      toast.error("Ish o'rni yaratishda xatolik: " + errorMessage, {
+      toast.error("Ish o'rnini yaratishda xatolik: " + errorMessage, {
         position: "top-right",
         autoClose: 6000,
       });

@@ -1,5 +1,6 @@
 "use client";
-import { X, AlertTriangle, Edit, Trash2 } from "lucide-react";
+
+import { X, AlertTriangle, Check, Edit } from "lucide-react";
 import "./ConfirmationModal.scss";
 
 const ConfirmationModal = ({
@@ -9,39 +10,25 @@ const ConfirmationModal = ({
   title,
   message,
   confirmText,
-  cancelText = "Bekor qilish",
-  type = "danger", // danger, warning, info
-  isLoading = false,
+  type = "warning",
+  isLoading,
 }) => {
   if (!isOpen) return null;
 
   const getIcon = () => {
     switch (type) {
       case "danger":
-        return <Trash2 size={24} />;
+        return <AlertTriangle size={24} />;
       case "warning":
         return <AlertTriangle size={24} />;
       case "edit":
         return <Edit size={24} />;
       default:
-        return <AlertTriangle size={24} />;
+        return <Check size={24} />;
     }
   };
 
-  const getIconClass = () => {
-    switch (type) {
-      case "danger":
-        return "danger";
-      case "warning":
-        return "warning";
-      case "edit":
-        return "edit";
-      default:
-        return "warning";
-    }
-  };
-
-  const getConfirmButtonClass = () => {
+  const getButtonClass = () => {
     switch (type) {
       case "danger":
         return "delete-btn";
@@ -55,10 +42,13 @@ const ConfirmationModal = ({
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="confirmation-modal-content">
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="confirmation-modal-content"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="modal-header">
-          <div className={`icon-container ${getIconClass()}`}>{getIcon()}</div>
+          <div className={`icon-container ${type}`}>{getIcon()}</div>
           <button className="close-btn" onClick={onClose} disabled={isLoading}>
             <X size={20} />
           </button>
@@ -71,14 +61,18 @@ const ConfirmationModal = ({
 
         <div className="modal-actions">
           <button className="cancel-btn" onClick={onClose} disabled={isLoading}>
-            {cancelText}
+            Bekor qilish
           </button>
           <button
-            className={getConfirmButtonClass()}
-            onClick={onConfirm}
+            className={getButtonClass()}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onConfirm();
+            }}
             disabled={isLoading}
           >
-            {isLoading ? "Bajarilmoqda..." : confirmText}
+            {isLoading ? "Yuklanmoqda..." : confirmText}
           </button>
         </div>
       </div>

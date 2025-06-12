@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Plus,
   Search,
@@ -25,8 +25,18 @@ const Jobs = () => {
   const [confirmationConfig, setConfirmationConfig] = useState({});
   const [selectedJob, setSelectedJob] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 1000); // 500ms delay
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const [filters, setFilters] = useState({
     location: "",
@@ -39,6 +49,40 @@ const Jobs = () => {
     sortOrder: "desc",
   });
 
+  // Debounced filters for search inputs
+  const [debouncedFilters, setDebouncedFilters] = useState(filters);
+
+  // Debounce filter changes for search inputs (location)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedFilters(filters);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [filters.location, filters]);
+
+  // Update other filters immediately
+  useEffect(() => {
+    setDebouncedFilters((prev) => ({
+      ...prev,
+      minSalary: filters.minSalary,
+      maxSalary: filters.maxSalary,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+      type: filters.type,
+      sortBy: filters.sortBy,
+      sortOrder: filters.sortOrder,
+    }));
+  }, [
+    filters.minSalary,
+    filters.maxSalary,
+    filters.startDate,
+    filters.endDate,
+    filters.type,
+    filters.sortBy,
+    filters.sortOrder,
+  ]);
+
   const { mutate: deleteJob, isPending: isDeleting } = useDeleteJob();
 
   const {
@@ -49,8 +93,13 @@ const Jobs = () => {
   } = useJobs({
     page: currentPage,
     limit: 10,
-    ...filters,
+    ...debouncedFilters, // Use debounced filters
   });
+
+  // Reset page when search term or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchTerm, debouncedFilters]);
 
   const getStatusBadge = (status) => {
     const statusMap = {
@@ -81,12 +130,20 @@ const Jobs = () => {
     return locationMap[location] || location;
   };
 
-  const handleViewJob = (job) => {
+  // Event handlers with proper event stopping
+  const handleViewJob = (e, job) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("View job clicked:", job);
     setSelectedJob(job);
     setIsViewModalOpen(true);
   };
 
-  const handleEditJob = (job) => {
+  const handleEditJob = (e, job) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Edit job clicked:", job);
+    setSelectedJob(job);
     setConfirmationConfig({
       title: "Ish o'rnini tahrirlash",
       message: `"${job.title}" ish o'rnini tahrirlashni xohlaysizmi?`,
@@ -101,7 +158,10 @@ const Jobs = () => {
     setIsConfirmationModalOpen(true);
   };
 
-  const handleDeleteJob = (job) => {
+  const handleDeleteJob = (e, job) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("Delete job clicked:", job);
     setSelectedJob(job);
     setConfirmationConfig({
       title: "Ish o'rnini o'chirish",
@@ -140,7 +200,7 @@ const Jobs = () => {
   };
 
   const clearFilters = () => {
-    setFilters({
+    const clearedFilters = {
       location: "",
       minSalary: "",
       maxSalary: "",
@@ -149,7 +209,9 @@ const Jobs = () => {
       type: "",
       sortBy: "createdAt",
       sortOrder: "desc",
-    });
+    };
+    setFilters(clearedFilters);
+    setDebouncedFilters(clearedFilters);
     setCurrentPage(1);
   };
 
@@ -236,7 +298,7 @@ const Jobs = () => {
 
   // Filter jobs by search term (client-side filtering)
   const filteredJobs = jobs.filter((job) =>
-    job.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    job.title?.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
   );
 
   return (
@@ -576,21 +638,21 @@ const Jobs = () => {
                         <button
                           className="action-btn view"
                           title="Ko'rish"
-                          onClick={() => handleViewJob(job)}
+                          onClick={(e) => handleViewJob(e, job)}
                         >
                           <Eye size={16} />
                         </button>
                         <button
                           className="action-btn edit"
                           title="Tahrirlash"
-                          onClick={() => handleEditJob(job)}
+                          onClick={(e) => handleEditJob(e, job)}
                         >
                           <Edit size={16} />
                         </button>
                         <button
                           className="action-btn delete"
                           title="O'chirish"
-                          onClick={() => handleDeleteJob(job)}
+                          onClick={(e) => handleDeleteJob(e, job)}
                           disabled={isDeleting}
                         >
                           <Trash2 size={16} />

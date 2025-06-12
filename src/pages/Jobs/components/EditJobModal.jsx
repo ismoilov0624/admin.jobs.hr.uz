@@ -1,12 +1,24 @@
 "use client";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { X, DollarSign, Clock, FileText } from "lucide-react";
+import {
+  X,
+  Briefcase,
+  MapPin,
+  DollarSign,
+  Calendar,
+  Users,
+  Building,
+  FileText,
+  Upload,
+  ImageIcon,
+} from "lucide-react";
 import { useUpdateJob } from "../service/useUpdateJob";
-import { useEffect } from "react";
 import "./CreateJobModal.scss";
 
 const EditJobModal = ({ isOpen, onClose, job }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const { mutate: updateJob, isPending } = useUpdateJob();
 
   const {
@@ -14,92 +26,92 @@ const EditJobModal = ({ isOpen, onClose, job }) => {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
     setValue,
-  } = useForm({
-    defaultValues: {
-      status: "ACTIVE",
-      type: "FULL_TIME",
-      workLocation: "OFFICE",
-      gender: "BOTH",
-    },
-  });
+  } = useForm();
 
-  // Watch start and end dates for validation
-  const startDate = watch("startDate");
-
-  // Populate form with job data when modal opens
   useEffect(() => {
-    if (isOpen && job) {
-      setValue("title", job.title);
-      setValue("position", job.position || "");
-      setValue("department", job.department || "");
-      setValue("speciality", job.speciality || "");
-      setValue("type", job.type);
-      setValue("workLocation", job.workLocation);
-      setValue("workSchedule", job.workSchedule);
-      setValue("gender", job.gender);
-      setValue("salary", job.salary);
-      setValue(
-        "startDate",
-        job.startDate ? new Date(job.startDate).toISOString().split("T")[0] : ""
-      );
-      setValue(
-        "endDate",
-        job.endDate ? new Date(job.endDate).toISOString().split("T")[0] : ""
-      );
-      setValue("status", job.status);
-      setValue("description", job.description);
-      setValue("requirements", job.requirements);
-      setValue("responsibilities", job.responsibilities);
-      setValue("conditions", job.conditions);
+    if (job && isOpen) {
+      // Reset form with job data
+      reset({
+        title: job.title || "",
+        salary: job.salary || "",
+        type: job.type || "FULL_TIME",
+        workSchedule: job.workSchedule || "",
+        workLocation: job.workLocation || "OFFICE",
+        gender: job.gender || "BOTH",
+        startDate: job.startDate ? job.startDate.split("T")[0] : "",
+        endDate: job.endDate ? job.endDate.split("T")[0] : "",
+        department: job.department || "",
+        position: job.position || "",
+        speciality: job.speciality || "",
+        description: job.description || "",
+        requirements: job.requirements || "",
+        responsibilities: job.responsibilities || "",
+        conditions: job.conditions || "",
+        status: job.status || "ACTIVE",
+      });
+
+      // Set existing image preview if available
+      if (job.avatar) {
+        const avatarUrl = job.avatar.startsWith("http")
+          ? job.avatar
+          : `https://api.sahifam.uz/uploads/${job.avatar}`;
+        setImagePreview(avatarUrl);
+      } else {
+        setImagePreview(null);
+      }
+      setSelectedImage(null);
     }
-  }, [isOpen, job, setValue]);
+  }, [job, isOpen, reset]);
+
+  if (!isOpen || !job) return null;
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+      setValue("avatar", file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    setValue("avatar", null);
+  };
 
   const onSubmit = (data) => {
-    console.log("=== EDIT FORM SUBMIT ===");
-    console.log("Form data:", data);
+    console.log("Edit form submitted with data:", data);
 
-    // Validate dates
-    if (new Date(data.endDate) <= new Date(data.startDate)) {
-      toast.error("Tugash sanasi boshlanish sanasidan kech bo'lishi kerak", {
-        position: "top-right",
-        autoClose: 5000,
-      });
-      return;
-    }
+    // Create FormData for file upload
+    const formData = new FormData();
 
-    // Format data exactly like create
-    const formattedData = {
-      title: data.title.trim(),
-      salary: Number.parseInt(data.salary),
-      type: data.type,
-      workSchedule: data.workSchedule.trim(),
-      workLocation: data.workLocation,
-      gender: data.gender,
-      startDate: new Date(data.startDate).toISOString(),
-      endDate: new Date(data.endDate).toISOString(),
-      description: data.description.trim(),
-      requirements: data.requirements.trim(),
-      responsibilities: data.responsibilities.trim(),
-      conditions: data.conditions.trim(),
-      status: data.status,
-      speciality: data.speciality?.trim() || "",
-      department: data.department?.trim() || "",
-      position: data.position?.trim() || "",
-    };
-
-    console.log("Formatted data for API:", formattedData);
+    // Add all form fields
+    Object.keys(data).forEach((key) => {
+      if (data[key] !== undefined && data[key] !== null && data[key] !== "") {
+        if (key === "avatar" && selectedImage) {
+          formData.append(key, selectedImage);
+        } else if (key !== "avatar") {
+          formData.append(key, String(data[key]));
+        }
+      }
+    });
 
     updateJob(
-      { jobId: job.id, jobData: formattedData },
+      {
+        jobId: job.id,
+        jobData: formData,
+      },
       {
         onSuccess: () => {
-          console.log("Job update successful");
-          onClose();
-        },
-        onError: (error) => {
-          console.error("Job update failed:", error);
+          handleClose();
         },
       }
     );
@@ -107,10 +119,10 @@ const EditJobModal = ({ isOpen, onClose, job }) => {
 
   const handleClose = () => {
     reset();
+    setSelectedImage(null);
+    setImagePreview(null);
     onClose();
   };
-
-  if (!isOpen || !job) return null;
 
   return (
     <div className="modal-overlay">
@@ -131,23 +143,17 @@ const EditJobModal = ({ isOpen, onClose, job }) => {
             {/* Basic Information */}
             <div className="form-section">
               <h3>
-                <FileText size={18} />
+                <Briefcase size={18} />
                 Asosiy ma'lumotlar
               </h3>
 
               <div className="form-group">
-                <label htmlFor="title">Ish nomi *</label>
+                <label>Ish nomi *</label>
                 <input
-                  id="title"
                   type="text"
                   placeholder="Ish nomini kiriting"
                   {...register("title", {
                     required: "Ish nomi majburiy",
-                    minLength: {
-                      value: 2,
-                      message:
-                        "Ish nomi kamida 2 ta belgidan iborat bo'lishi kerak",
-                    },
                   })}
                   className={errors.title ? "error" : ""}
                 />
@@ -156,52 +162,22 @@ const EditJobModal = ({ isOpen, onClose, job }) => {
                 )}
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="position">Lavozim</label>
-                  <input
-                    id="position"
-                    type="text"
-                    placeholder="Lavozim"
-                    {...register("position")}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="department">Bo'lim</label>
-                  <input
-                    id="department"
-                    type="text"
-                    placeholder="Bo'lim"
-                    {...register("department")}
-                  />
-                </div>
-              </div>
-
               <div className="form-group">
-                <label htmlFor="speciality">Mutaxassislik</label>
+                <label>Maosh</label>
                 <input
-                  id="speciality"
                   type="text"
-                  placeholder="Mutaxassislik"
-                  {...register("speciality")}
+                  placeholder="Masalan: 5,000,000 so'm yoki kelishilgan holda"
+                  {...register("salary")}
                 />
               </div>
-            </div>
-
-            {/* Work Details */}
-            <div className="form-section">
-              <h3>
-                <Clock size={18} />
-                Ish sharoitlari
-              </h3>
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="type">Ish turi *</label>
+                  <label>Ish turi *</label>
                   <select
-                    id="type"
-                    {...register("type", { required: "Ish turi majburiy" })}
+                    {...register("type", {
+                      required: "Ish turi majburiy",
+                    })}
                     className={errors.type ? "error" : ""}
                   >
                     <option value="FULL_TIME">To'liq vaqt</option>
@@ -215,9 +191,8 @@ const EditJobModal = ({ isOpen, onClose, job }) => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="workLocation">Ish joyi *</label>
+                  <label>Ish joyi *</label>
                   <select
-                    id="workLocation"
                     {...register("workLocation", {
                       required: "Ish joyi majburiy",
                     })}
@@ -235,193 +210,199 @@ const EditJobModal = ({ isOpen, onClose, job }) => {
                 </div>
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="workSchedule">Ish vaqti *</label>
-                  <input
-                    id="workSchedule"
-                    type="text"
-                    placeholder="Ish vaqti"
-                    {...register("workSchedule", {
-                      required: "Ish vaqti majburiy",
-                    })}
-                    className={errors.workSchedule ? "error" : ""}
-                  />
-                  {errors.workSchedule && (
-                    <span className="error-message">
-                      {errors.workSchedule.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="gender">Jins *</label>
-                  <select
-                    id="gender"
-                    {...register("gender", { required: "Jins majburiy" })}
-                    className={errors.gender ? "error" : ""}
-                  >
-                    <option value="BOTH">Farqi yo'q</option>
-                    <option value="MALE">Erkak</option>
-                    <option value="FEMALE">Ayol</option>
-                  </select>
-                  {errors.gender && (
-                    <span className="error-message">
-                      {errors.gender.message}
-                    </span>
-                  )}
-                </div>
+              <div className="form-group">
+                <label>Ish vaqti *</label>
+                <input
+                  type="text"
+                  placeholder="Masalan: Dushanba-Juma, 9:00-18:00"
+                  {...register("workSchedule", {
+                    required: "Ish vaqti majburiy",
+                  })}
+                  className={errors.workSchedule ? "error" : ""}
+                />
+                {errors.workSchedule && (
+                  <span className="error-message">
+                    {errors.workSchedule.message}
+                  </span>
+                )}
               </div>
             </div>
 
-            {/* Salary and Dates */}
+            {/* Company Information */}
             <div className="form-section">
               <h3>
-                <DollarSign size={18} />
-                Maosh va muddat
+                <Building size={18} />
+                Kompaniya ma'lumotlari
               </h3>
 
               <div className="form-group">
-                <label htmlFor="salary">Maosh (so'm) *</label>
+                <label>Bo'lim</label>
                 <input
-                  id="salary"
-                  type="number"
-                  min="0"
-                  placeholder="Maosh"
-                  {...register("salary", {
-                    required: "Maosh majburiy",
-                    min: {
-                      value: 1,
-                      message: "Maosh 1 dan kam bo'lmasligi kerak",
-                    },
-                  })}
-                  className={errors.salary ? "error" : ""}
+                  type="text"
+                  placeholder="Bo'lim nomini kiriting"
+                  {...register("department")}
                 />
-                {errors.salary && (
-                  <span className="error-message">{errors.salary.message}</span>
-                )}
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="startDate">Boshlanish sanasi *</label>
-                  <input
-                    id="startDate"
-                    type="date"
-                    {...register("startDate", {
-                      required: "Boshlanish sanasi majburiy",
-                    })}
-                    className={errors.startDate ? "error" : ""}
-                  />
-                  {errors.startDate && (
-                    <span className="error-message">
-                      {errors.startDate.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="endDate">Tugash sanasi *</label>
-                  <input
-                    id="endDate"
-                    type="date"
-                    {...register("endDate", {
-                      required: "Tugash sanasi majburiy",
-                    })}
-                    className={errors.endDate ? "error" : ""}
-                  />
-                  {errors.endDate && (
-                    <span className="error-message">
-                      {errors.endDate.message}
-                    </span>
-                  )}
-                </div>
               </div>
 
               <div className="form-group">
-                <label htmlFor="status">Holat</label>
-                <select id="status" {...register("status")}>
-                  <option value="DRAFT">Qoralama</option>
-                  <option value="ACTIVE">Faol</option>
-                  <option value="INACTIVE">Nofaol</option>
-                  <option value="CLOSED">Yopiq</option>
+                <label>Lavozim</label>
+                <input
+                  type="text"
+                  placeholder="Lavozim nomini kiriting"
+                  {...register("position")}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Mutaxassislik</label>
+                <input
+                  type="text"
+                  placeholder="Mutaxassislik nomini kiriting"
+                  {...register("speciality")}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Jins talabi</label>
+                <select {...register("gender")}>
+                  <option value="BOTH">Farqi yo'q</option>
+                  <option value="MALE">Erkak</option>
+                  <option value="FEMALE">Ayol</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* Text Areas */}
+          {/* Dates */}
           <div className="form-section full-width">
-            <div className="form-group">
-              <label htmlFor="description">Tavsif *</label>
-              <textarea
-                id="description"
-                rows="4"
-                placeholder="Ish haqida tavsif"
-                {...register("description", {
-                  required: "Tavsif majburiy",
-                })}
-                className={errors.description ? "error" : ""}
-              />
-              {errors.description && (
-                <span className="error-message">
-                  {errors.description.message}
-                </span>
+            <h3>
+              <Calendar size={18} />
+              Sanalar
+            </h3>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>Boshlanish sanasi *</label>
+                <input
+                  type="date"
+                  {...register("startDate", {
+                    required: "Boshlanish sanasi majburiy",
+                  })}
+                  className={errors.startDate ? "error" : ""}
+                />
+                {errors.startDate && (
+                  <span className="error-message">
+                    {errors.startDate.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>Tugash sanasi *</label>
+                <input
+                  type="date"
+                  {...register("endDate", {
+                    required: "Tugash sanasi majburiy",
+                  })}
+                  className={errors.endDate ? "error" : ""}
+                />
+                {errors.endDate && (
+                  <span className="error-message">
+                    {errors.endDate.message}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Image Upload */}
+          <div className="form-section full-width">
+            <h3>
+              <ImageIcon size={18} />
+              Rasm yuklash
+            </h3>
+
+            <div className="image-upload-section">
+              {imagePreview ? (
+                <div className="image-preview">
+                  <img src={imagePreview || "/placeholder.svg"} alt="Preview" />
+                  <button
+                    type="button"
+                    className="remove-image-btn"
+                    onClick={removeImage}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ) : (
+                <div className="image-upload-area">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="image-input"
+                  />
+                  <div className="image-upload-label">
+                    <Upload size={24} />
+                    <span>Rasm yuklash</span>
+                    <small>PNG, JPG, JPEG (max 5MB)</small>
+                  </div>
+                </div>
               )}
+            </div>
+          </div>
+
+          {/* Descriptions */}
+          <div className="form-section full-width">
+            <h3>
+              <FileText size={18} />
+              Tavsiflar
+            </h3>
+
+            <div className="form-group">
+              <label>Ish haqida tavsif</label>
+              <textarea
+                placeholder="Ish haqida batafsil ma'lumot kiriting"
+                {...register("description")}
+                rows={4}
+              />
             </div>
 
             <div className="form-group">
-              <label htmlFor="requirements">Talablar *</label>
+              <label>Talablar</label>
               <textarea
-                id="requirements"
-                rows="4"
-                placeholder="Talablar"
-                {...register("requirements", {
-                  required: "Talablar majburiy",
-                })}
-                className={errors.requirements ? "error" : ""}
+                placeholder="Nomzodga qo'yiladigan talablarni kiriting"
+                {...register("requirements")}
+                rows={4}
               />
-              {errors.requirements && (
-                <span className="error-message">
-                  {errors.requirements.message}
-                </span>
-              )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="responsibilities">Mas'uliyatlar *</label>
+              <label>Mas'uliyatlar</label>
               <textarea
-                id="responsibilities"
-                rows="4"
-                placeholder="Mas'uliyatlar"
-                {...register("responsibilities", {
-                  required: "Mas'uliyatlar majburiy",
-                })}
-                className={errors.responsibilities ? "error" : ""}
+                placeholder="Ish mas'uliyatlarini kiriting"
+                {...register("responsibilities")}
+                rows={4}
               />
-              {errors.responsibilities && (
-                <span className="error-message">
-                  {errors.responsibilities.message}
-                </span>
-              )}
             </div>
 
             <div className="form-group">
-              <label htmlFor="conditions">Sharoitlar *</label>
+              <label>Sharoitlar</label>
               <textarea
-                id="conditions"
-                rows="4"
-                placeholder="Sharoitlar"
-                {...register("conditions", {
-                  required: "Sharoitlar majburiy",
-                })}
-                className={errors.conditions ? "error" : ""}
+                placeholder="Ish sharoitlari haqida ma'lumot kiriting"
+                {...register("conditions")}
+                rows={4}
               />
-              {errors.conditions && (
-                <span className="error-message">
-                  {errors.conditions.message}
-                </span>
-              )}
+            </div>
+
+            <div className="form-group">
+              <label>Holat</label>
+              <select {...register("status")}>
+                <option value="ACTIVE">Faol</option>
+                <option value="INACTIVE">Nofaol</option>
+                <option value="DRAFT">Qoralama</option>
+                <option value="CLOSED">Yopiq</option>
+              </select>
             </div>
           </div>
 
@@ -435,7 +416,7 @@ const EditJobModal = ({ isOpen, onClose, job }) => {
               Bekor qilish
             </button>
             <button type="submit" className="submit-btn" disabled={isPending}>
-              {isPending ? "Saqlanmoqda..." : "Yangilash"}
+              {isPending ? "Saqlanmoqda..." : "Saqlash"}
             </button>
           </div>
         </form>

@@ -1,0 +1,341 @@
+.candidate-detail-page {
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      color: #374151;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+
+      &:hover {
+        background: #f9fafb;
+        border-color: #d1d5db;
+      }
+    }
+
+    .view-profile-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #5b5cf6;
+      }
+
+      &.large {
+        padding: 16px 24px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .page-content {
+    .candidate-profile-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+      .profile-header {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+
+        .avatar-section {
+          .candidate-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+
+            .avatar-fallback {
+              width: 100%;
+              height: 100%;
+              background: #e0e7ff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: #6366f1;
+            }
+          }
+        }
+
+        .profile-info {
+          flex: 1;
+
+          h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 16px 0;
+          }
+
+          .profile-meta {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+
+            .status-badge {
+              display: inline-block;
+              padding: 8px 16px;
+              border-radius: 12px;
+              font-size: 14px;
+              font-weight: 500;
+
+              &.employed {
+                background: #dcfce7;
+                color: #166534;
+              }
+
+              &.unemployed {
+                background: #fef3c7;
+                color: #92400e;
+              }
+            }
+
+            .specialty {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              color: #64748b;
+              font-weight: 500;
+
+              svg {
+                color: #6366f1;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .info-sections {
+      display: grid;
+      gap: 24px;
+      margin-bottom: 32px;
+
+      .info-section {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+        h3 {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 18px;
+          font-weight: 600;
+          color: #1e293b;
+          margin: 0 0 20px 0;
+          padding-bottom: 12px;
+          border-bottom: 2px solid #e2e8f0;
+
+          svg {
+            color: #6366f1;
+          }
+        }
+
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 16px;
+
+          .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            .label {
+              font-weight: 500;
+              color: #64748b;
+              font-size: 14px;
+            }
+
+            .value {
+              font-weight: 600;
+              color: #1e293b;
+              font-size: 14px;
+              text-align: right;
+            }
+
+            .status-badge {
+              display: inline-block;
+              padding: 4px 8px;
+              border-radius: 8px;
+              font-size: 12px;
+              font-weight: 500;
+
+              &.employed {
+                background: #dcfce7;
+                color: #166534;
+              }
+
+              &.unemployed {
+                background: #fef3c7;
+                color: #92400e;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .profile-view-section {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      color: white;
+
+      h3 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 0 0 24px 0;
+        opacity: 0.9;
+      }
+
+      .view-profile-btn {
+        background: white;
+        color: #6366f1;
+
+        &:hover {
+          background: #f8fafc;
+        }
+      }
+    }
+  }
+
+  .loading-state,
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #6366f1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #64748b;
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .retry-btn {
+      background: #6366f1;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 16px;
+
+      &:hover {
+        background: #5b5cf6;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .candidate-detail-page {
+    .page-header {
+      flex-direction: column;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .page-content {
+      .candidate-profile-card .profile-header {
+        flex-direction: column;
+        text-align: center;
+
+        .profile-info h1 {
+          font-size: 24px;
+        }
+
+        .profile-meta {
+          justify-content: center;
+        }
+      }
+
+      .info-sections .info-section .info-grid {
+        grid-template-columns: 1fr;
+
+        .info-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+
+          .value {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}

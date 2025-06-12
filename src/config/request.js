@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const request = axios.create({
-  baseURL: "https://sahifam.uz",
+  baseURL: "https://api.sahifam.uz",
   timeout: 30000, // 30 seconds timeout
 });
 

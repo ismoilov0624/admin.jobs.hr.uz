@@ -6,7 +6,9 @@ import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Jobs from "./pages/Jobs/Jobs";
 import Applications from "./pages/Applications/Applications";
+import ApplicationDetail from "./pages/Applications/ApplicationDetail";
 import Candidates from "./pages/Candidates/Candidates";
+import CandidateDetail from "./pages/Candidates/CandidateDetail";
 import { useAuth } from "./hooks/useAuth";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -75,7 +77,9 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="jobs" element={<Jobs />} />
             <Route path="applications" element={<Applications />} />
+            <Route path="applications/:id" element={<ApplicationDetail />} />
             <Route path="candidates" element={<Candidates />} />
+            <Route path="candidates/:id" element={<CandidateDetail />} />
           </Route>
         ) : null}
 
