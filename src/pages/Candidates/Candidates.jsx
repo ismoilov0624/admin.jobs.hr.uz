@@ -151,7 +151,10 @@ const Candidates = () => {
 
   const handleViewCandidate = (candidate) => {
     // Redirect to external profile URL instead of internal route
-    window.open(`https://hr.jobs.uz/profile/${candidate.id}`, "_blank");
+    window.open(
+      `https://jobs-hr-uz.vercel.app/profile/personal-infos/${candidate.id}`,
+      "_blank"
+    );
   };
 
   const handleFilterChange = (newFilters) => {
