@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, User, Lock } from "lucide-react";
 import { useLogin } from "./service/useLogin";
+import logo from "../../assets/logo.png";
 import "./Login.scss";
 
 const Login = () => {
@@ -25,7 +26,7 @@ const Login = () => {
       <div className="login-card">
         <div className="login-header">
           <div className="logo">
-            <img src="/src/assets/logo.png" alt="Jobs Logo" />
+            <img src={logo} alt="Jobs Logo" />
           </div>
           <h1>Tizimga kirish</h1>
           <p>Admin hisobingizga kiring</p>

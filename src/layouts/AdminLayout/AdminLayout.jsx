@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../hooks/useAuth";
+import logo from "../../assets/logo.png";
 import "./AdminLayout.scss";
 
 const AdminLayout = () => {
@@ -79,7 +80,7 @@ const AdminLayout = () => {
         <div className="sidebar-header">
           <div className="logo">
             <div className="logo-icon">
-              <img src="/src/assets/logo.png" alt="Jobs Logo" />
+              <img src={logo} alt="Jobs Logo" />
             </div>
           </div>
         </div>
