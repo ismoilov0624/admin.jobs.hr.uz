@@ -54,20 +54,17 @@ const AdminLayout = () => {
   };
 
   const handleLogout = () => {
-    if (window.confirm("Tizimdan chiqishni xohlaysizmi?")) {
-      console.log("User confirmed logout");
-      logout();
+    logout();
 
-      toast.success("Tizimdan muvaffaqiyatli chiqdingiz!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
+    toast.success("Tizimdan muvaffaqiyatli chiqdingiz!", {
+      position: "top-right",
+      autoClose: 2000,
+    });
 
-      // Navigate to login page using React Router
-      setTimeout(() => {
-        navigate("/login", { replace: true });
-      }, 100);
-    }
+    // Navigate to login page using React Router
+    setTimeout(() => {
+      navigate("/login", { replace: true });
+    }, 100);
   };
 
   const handleUserProfileClick = () => {

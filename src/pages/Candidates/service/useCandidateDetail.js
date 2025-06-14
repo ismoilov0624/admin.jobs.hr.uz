@@ -3,8 +3,6 @@ import { request } from "../../../config/request";
 
 const fetchCandidateDetail = async (candidateId) => {
   try {
-    console.log("Fetching candidate detail for ID:", candidateId);
-
     // Try multiple parameter formats
     const params = new URLSearchParams({
       includeDetails: "true",
@@ -16,26 +14,13 @@ const fetchCandidateDetail = async (candidateId) => {
     });
 
     const response = await request.get(`/users/${candidateId}?${params}`);
-    console.log("Candidate detail response:", response.data);
 
     // Debug user data in the response
     if (response.data?.data) {
-      console.log("Candidate detail data:", response.data.data);
-      console.log("Candidate fields check:", {
-        birthDate: response.data.data?.birthDate,
-        gender: response.data.data?.gender,
-        region: response.data.data?.region,
-        district: response.data.data?.district,
-        specialty: response.data.data?.specialty,
-        degree: response.data.data?.degree,
-      });
     }
 
     return response.data;
   } catch (error) {
-    console.error("Error fetching candidate detail:", error);
-    console.error("Error response:", error.response?.data);
-    console.error("Error status:", error.response?.status);
     throw error;
   }
 };
@@ -47,8 +32,5 @@ export const useCandidateDetail = (candidateId) => {
     enabled: !!candidateId,
     retry: 1,
     staleTime: 5 * 60 * 1000, // 5 minutes
-    onError: (error) => {
-      console.error("Candidate detail query error:", error);
-    },
   });
 };

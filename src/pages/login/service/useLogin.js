@@ -18,8 +18,6 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: loginAdmin,
     onSuccess: (data) => {
-      console.log("Login successful:", data);
-
       // Use the login function from useAuth hook
       login(data.data.accessToken, data.data.refreshToken);
 
@@ -34,8 +32,6 @@ export const useLogin = () => {
       }, 500);
     },
     onError: (error) => {
-      console.error("Login error:", error);
-
       let errorMessage = "Login xatosi yuz berdi";
 
       if (error.response?.data?.message) {

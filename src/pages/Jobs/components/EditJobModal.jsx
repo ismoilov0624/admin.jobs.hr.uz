@@ -88,8 +88,6 @@ const EditJobModal = ({ isOpen, onClose, job }) => {
   };
 
   const onSubmit = (data) => {
-    console.log("Edit form submitted with data:", data);
-
     // Create FormData for file upload
     const formData = new FormData();
 

@@ -134,7 +134,7 @@ const Jobs = () => {
   const handleViewJob = (e, job) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("View job clicked:", job);
+
     setSelectedJob(job);
     setIsViewModalOpen(true);
   };
@@ -142,7 +142,7 @@ const Jobs = () => {
   const handleEditJob = (e, job) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Edit job clicked:", job);
+
     setSelectedJob(job);
     setConfirmationConfig({
       title: "Ish o'rnini tahrirlash",
@@ -161,7 +161,7 @@ const Jobs = () => {
   const handleDeleteJob = (e, job) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Delete job clicked:", job);
+
     setSelectedJob(job);
     setConfirmationConfig({
       title: "Ish o'rnini o'chirish",

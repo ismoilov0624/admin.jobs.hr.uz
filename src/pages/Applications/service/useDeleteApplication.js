@@ -4,17 +4,10 @@ import { request } from "../../../config/request";
 
 const deleteApplication = async (applicationId) => {
   try {
-    console.log("=== DELETE APPLICATION DEBUG ===");
-    console.log("1. Application ID:", applicationId);
-
     const response = await request.delete(`/applications/${applicationId}`);
-    console.log("2. Delete application response:", response.data);
+
     return response.data;
   } catch (error) {
-    console.error("=== DELETE APPLICATION ERROR ===");
-    console.error("Error:", error);
-    console.error("Error response:", error.response?.data);
-    console.error("Error status:", error.response?.status);
     throw error;
   }
 };
@@ -25,7 +18,6 @@ export const useDeleteApplication = () => {
   return useMutation({
     mutationFn: deleteApplication,
     onSuccess: (data) => {
-      console.log("Application deleted successfully:", data);
       // Refetch applications list
       queryClient.invalidateQueries({ queryKey: ["applications"] });
 
@@ -35,8 +27,6 @@ export const useDeleteApplication = () => {
       });
     },
     onError: (error) => {
-      console.error("Delete application error:", error);
-
       let errorMessage = "Noma'lum xatolik yuz berdi";
 
       if (error.response?.data?.message) {

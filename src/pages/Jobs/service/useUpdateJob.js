@@ -4,10 +4,6 @@ import { request } from "../../../config/request";
 
 const updateJob = async ({ jobId, jobData }) => {
   try {
-    console.log("=== UPDATE JOB DEBUG ===");
-    console.log("1. Job ID:", jobId);
-    console.log("2. Job data:", jobData);
-
     // Check if jobData is FormData (for file uploads) or regular object
     const isFormData = jobData instanceof FormData;
 
@@ -20,26 +16,19 @@ const updateJob = async ({ jobId, jobData }) => {
       : {};
 
     if (isFormData) {
-      console.log("3. FormData entries:");
       for (const [key, value] of jobData.entries()) {
-        console.log(`${key}:`, value);
       }
     } else {
       // Ensure salary is always a string for regular object
       if (jobData.salary !== undefined && jobData.salary !== null) {
         jobData.salary = String(jobData.salary).trim();
       }
-      console.log("3. Job data after salary conversion:", jobData);
     }
 
     const response = await request.patch(`/jobs/${jobId}`, jobData, config);
-    console.log("4. Update job response:", response.data);
+
     return response.data;
   } catch (error) {
-    console.error("=== UPDATE JOB ERROR ===");
-    console.error("Error:", error);
-    console.error("Error response:", error.response?.data);
-    console.error("Error status:", error.response?.status);
     throw error;
   }
 };
@@ -50,7 +39,6 @@ export const useUpdateJob = () => {
   return useMutation({
     mutationFn: updateJob,
     onSuccess: (data) => {
-      console.log("Job updated successfully:", data);
       // Refetch jobs list
       queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
 
@@ -60,8 +48,6 @@ export const useUpdateJob = () => {
       });
     },
     onError: (error) => {
-      console.error("Update job error:", error);
-
       let errorMessage = "Noma'lum xatolik yuz berdi";
 
       if (error.response?.data?.message) {

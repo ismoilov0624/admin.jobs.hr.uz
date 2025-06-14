@@ -73,8 +73,6 @@ const CreateJobModal = ({ isOpen, onClose }) => {
   };
 
   const onSubmit = (data) => {
-    console.log("Form submitted with data:", data);
-
     // Add the selected image to form data
     if (selectedImage) {
       data.avatar = selectedImage;

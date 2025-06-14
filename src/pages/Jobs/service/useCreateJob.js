@@ -4,9 +4,6 @@ import { request } from "../../../config/request";
 
 const createJob = async (jobData) => {
   try {
-    console.log("=== CREATE JOB DEBUG ===");
-    console.log("1. Job data:", jobData);
-
     // Create FormData for file upload
     const formData = new FormData();
 
@@ -25,9 +22,7 @@ const createJob = async (jobData) => {
       }
     });
 
-    console.log("2. FormData entries:");
     for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
     }
 
     const response = await request.post("/jobs", formData, {
@@ -36,13 +31,8 @@ const createJob = async (jobData) => {
       },
     });
 
-    console.log("3. Create job response:", response.data);
     return response.data;
   } catch (error) {
-    console.error("=== CREATE JOB ERROR ===");
-    console.error("Error:", error);
-    console.error("Error response:", error.response?.data);
-    console.error("Error status:", error.response?.status);
     throw error;
   }
 };
@@ -53,7 +43,6 @@ export const useCreateJob = () => {
   return useMutation({
     mutationFn: createJob,
     onSuccess: (data) => {
-      console.log("Job created successfully:", data);
       // Refetch jobs list
       queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
 
@@ -63,8 +52,6 @@ export const useCreateJob = () => {
       });
     },
     onError: (error) => {
-      console.error("Create job error:", error);
-
       let errorMessage = "Noma'lum xatolik yuz berdi";
 
       if (error.response?.data?.message) {

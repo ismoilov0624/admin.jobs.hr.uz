@@ -197,7 +197,7 @@ const Applications = () => {
   const handleViewApplication = (e, application) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("View application clicked:", application);
+
     navigate(`/applications/${application.id}`);
   };
 
@@ -208,12 +208,8 @@ const Applications = () => {
   const handleStatusUpdate = (e, application, newStatus) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("=== STATUS UPDATE DEBUG ===");
-    console.log("Application:", application);
-    console.log("New status:", newStatus);
 
     if (!application || !application.id) {
-      console.error("Invalid application object:", application);
       toast.error("Noto'g'ri ariza ma'lumotlari");
       return;
     }
@@ -229,10 +225,6 @@ const Applications = () => {
       confirmText: "O'zgartirish",
       type: newStatus === "ACCEPTED" ? "edit" : "warning",
       onConfirm: () => {
-        console.log(
-          "Confirming status update for application ID:",
-          application.id
-        );
         updateStatus(
           {
             applicationId: application.id,
@@ -240,12 +232,10 @@ const Applications = () => {
           },
           {
             onSuccess: (data) => {
-              console.log("Status update successful:", data);
               closeModals();
               refetch();
             },
             onError: (error) => {
-              console.error("Status update failed:", error);
               closeModals();
             },
           }
@@ -258,11 +248,8 @@ const Applications = () => {
   const handleDeleteApplication = (e, application) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("=== DELETE APPLICATION DEBUG ===");
-    console.log("Application:", application);
 
     if (!application || !application.id) {
-      console.error("Invalid application object:", application);
       toast.error("Noto'g'ri ariza ma'lumotlari");
       return;
     }
@@ -276,15 +263,12 @@ const Applications = () => {
       confirmText: "O'chirish",
       type: "danger",
       onConfirm: () => {
-        console.log("Confirming delete for application ID:", application.id);
         deleteApplication(application.id, {
           onSuccess: (data) => {
-            console.log("Delete successful:", data);
             closeModals();
             refetch();
           },
           onError: (error) => {
-            console.error("Delete failed:", error);
             closeModals();
           },
         });

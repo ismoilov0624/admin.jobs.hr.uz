@@ -15,13 +15,6 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   const { isAuthenticated, isLoading } = useAuth();
 
-  console.log(
-    "App render - isAuthenticated:",
-    isAuthenticated,
-    "isLoading:",
-    isLoading
-  );
-
   // Show loading spinner while checking authentication
   if (isLoading) {
     return (
