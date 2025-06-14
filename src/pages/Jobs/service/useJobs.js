@@ -89,7 +89,7 @@ const fetchJobs = async ({
     });
     console.log("Request URL:", `/jobs?${params}`);
 
-    const response = await request.get(`/jobs?${params}`);
+    const response = await request.get(`admins/jobs?${params}`);
     console.log("Jobs response:", response.data);
 
     return response.data;
