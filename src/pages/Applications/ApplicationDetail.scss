@@ -702,7 +702,7 @@
     .page-header {
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
 
       .back-btn,
       .view-profile-btn {
@@ -712,7 +712,7 @@
     }
 
     .application-status-card {
-      padding: 20px;
+      padding: 16px;
 
       .status-header {
         flex-direction: column;
@@ -726,28 +726,97 @@
 
       .application-meta {
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
       }
     }
 
     .info-section {
-      padding: 20px !important;
+      padding: 16px !important;
 
-      .candidate-detail-card {
-        flex-direction: column;
-        text-align: center;
+      &.candidate-info-section {
+        .candidate-detail-card {
+          flex-direction: column;
+          text-align: center;
+          gap: 16px;
 
-        .candidate-avatar {
-          align-self: center;
-        }
+          .candidate-avatar {
+            align-self: center;
+          }
 
-        .candidate-details .detail-grid {
-          grid-template-columns: 1fr;
+          .candidate-details .detail-grid {
+            grid-template-columns: 1fr;
+          }
         }
       }
 
-      .job-details-grid {
-        grid-template-columns: 1fr !important;
+      &.job-info-section {
+        .job-detail-card .job-details-grid {
+          grid-template-columns: 1fr !important;
+        }
+      }
+
+      &.education-section,
+      &.experience-section {
+        .education-list,
+        .experience-list {
+          .education-item,
+          .experience-item {
+            .education-header,
+            .experience-header {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 8px;
+
+              .education-period,
+              .experience-period {
+                margin-left: 0;
+              }
+            }
+          }
+        }
+      }
+
+      &.language-section {
+        .language-list .language-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .application-detail-page {
+      padding: 12px;
+
+      .application-status-card {
+        padding: 12px;
+
+        .status-header h1 {
+          font-size: 18px;
+        }
+      }
+
+      .info-section {
+        padding: 12px !important;
+
+        h3 {
+          font-size: 16px;
+        }
+
+        &.candidate-info-section {
+          .candidate-detail-card {
+            padding: 16px;
+
+            .candidate-avatar {
+              width: 60px;
+              height: 60px;
+            }
+
+            .candidate-details h4 {
+              font-size: 18px;
+            }
+          }
+        }
       }
     }
   }

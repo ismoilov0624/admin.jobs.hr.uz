@@ -568,6 +568,7 @@
   }
 }
 
+// Responsive breakpoints qo'shing
 @media (max-width: 1200px) {
   .candidates-page .page-content .candidates-table {
     .table-header,
@@ -585,33 +586,132 @@
   .candidates-page {
     .page-header .header-content {
       flex-direction: column;
-      gap: 16px;
-      align-items: flex-start;
+      align-items: stretch;
+
+      .stats {
+        justify-content: center;
+      }
     }
 
     .page-content {
-      .toolbar {
+      .filter-container {
         flex-direction: column;
-        gap: 16px;
-        align-items: stretch;
 
-        .toolbar-actions {
+        .filter-btn {
+          width: 100%;
           justify-content: center;
         }
       }
 
-      .candidates-table {
-        .table-header,
-        .table-body .table-row {
-          grid-template-columns: 1fr 1fr;
-          padding: 16px 20px;
+      .filters-panel {
+        padding: 16px;
 
-          .col-id,
-          .col-info,
-          .col-specialty,
-          .col-status {
-            display: none;
+        .filters-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .filter-actions {
+          flex-direction: column;
+
+          .clear-filters-btn,
+          .close-filters-btn {
+            width: 100%;
           }
+        }
+      }
+
+      .candidates-table {
+        .table-header {
+          display: none;
+        }
+
+        .table-body .table-row {
+          display: block;
+          padding: 16px;
+
+          .col {
+            display: block;
+            margin-bottom: 12px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          .col-id {
+            display: inline-block;
+            margin-right: 12px;
+            margin-bottom: 8px;
+          }
+
+          .candidate-info {
+            margin-bottom: 12px;
+          }
+
+          .col-info {
+            margin-bottom: 12px;
+
+            .candidate-meta {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 8px;
+            }
+          }
+
+          .specialty {
+            display: inline-block;
+            margin-right: 16px;
+            margin-bottom: 8px;
+          }
+
+          .status-badge {
+            margin-bottom: 12px;
+          }
+
+          .actions {
+            justify-content: flex-start;
+          }
+        }
+      }
+
+      .pagination {
+        flex-direction: column;
+        gap: 12px;
+
+        .pagination-btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .candidates-page {
+    .page-content {
+      .filters-panel {
+        padding: 12px;
+      }
+
+      .candidates-table .table-body .table-row {
+        padding: 12px;
+
+        .candidate-info {
+          .candidate-avatar {
+            width: 48px;
+            height: 48px;
+          }
+
+          .candidate-details h4 {
+            font-size: 14px;
+          }
+        }
+
+        .actions .action-btn {
+          width: 36px;
+          height: 36px;
         }
       }
     }

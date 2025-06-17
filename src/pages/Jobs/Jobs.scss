@@ -6,6 +6,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
 
       .title-section {
         .page-subtitle {
@@ -28,6 +30,7 @@
         cursor: pointer;
         transition: all 0.2s;
         font-size: 14px;
+        white-space: nowrap;
 
         &:hover:not(:disabled) {
           background: #5b5cf6;
@@ -576,6 +579,7 @@
   }
 }
 
+// Responsive breakpoints
 @media (max-width: 1200px) {
   .jobs-page .page-content {
     .filters-panel .filters-grid {
@@ -601,18 +605,30 @@
   .jobs-page {
     .page-header .header-content {
       flex-direction: column;
-      gap: 16px;
-      align-items: flex-start;
+      align-items: stretch;
+
+      .create-btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
 
     .page-content {
       .filter-container {
         flex-direction: column;
+
+        .filter-btn {
+          width: 100%;
+          justify-content: center;
+        }
       }
 
       .filters-panel {
+        padding: 16px;
+
         .filters-grid {
           grid-template-columns: 1fr;
+          gap: 16px;
         }
 
         .filter-group {
@@ -620,6 +636,126 @@
           .date-range {
             flex-direction: column;
             gap: 8px;
+
+            .range-separator {
+              display: none;
+            }
+          }
+        }
+
+        .sort-section .filter-group {
+          max-width: none;
+
+          .sort-controls {
+            flex-direction: column;
+            gap: 8px;
+
+            .sort-direction-btn {
+              width: 100%;
+              height: 40px;
+            }
+          }
+        }
+      }
+
+      .jobs-table {
+        .table-header {
+          display: none;
+        }
+
+        .table-body .table-row {
+          display: block;
+          padding: 16px;
+          border-bottom: 1px solid #f1f5f9;
+
+          .col {
+            display: block;
+            margin-bottom: 8px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          .job-info {
+            margin-bottom: 12px;
+
+            .job-details h3 {
+              white-space: normal;
+              font-size: 16px;
+            }
+          }
+
+          .location,
+          .salary,
+          .job-type,
+          .date-info {
+            display: inline-block;
+            margin-right: 16px;
+            margin-bottom: 8px;
+          }
+
+          .status-badge {
+            margin-bottom: 12px;
+          }
+
+          .actions {
+            justify-content: flex-start;
+          }
+        }
+      }
+
+      .empty-state {
+        padding: 32px 16px;
+
+        .empty-icon {
+          width: 60px;
+          height: 60px;
+        }
+
+        h3 {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .jobs-page {
+    .page-content {
+      .filters-panel {
+        padding: 12px;
+
+        .quick-filters .quick-filter-tags {
+          .quick-filter-tag {
+            font-size: 12px;
+            padding: 6px 12px;
+          }
+        }
+      }
+
+      .jobs-table .table-body .table-row {
+        padding: 12px;
+
+        .job-info {
+          .job-icon {
+            width: 36px;
+            height: 36px;
+          }
+
+          .job-details h3 {
+            font-size: 14px;
+          }
+        }
+
+        .actions .action-btn {
+          width: 28px;
+          height: 28px;
+
+          svg {
+            width: 14px;
+            height: 14px;
           }
         }
       }

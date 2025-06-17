@@ -6,6 +6,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
 
       .title-section {
         .page-subtitle {
@@ -700,6 +702,7 @@
   }
 }
 
+// Responsive breakpoints
 @media (max-width: 1200px) {
   .applications-page .page-content .applications-table {
     .table-header,
@@ -716,28 +719,143 @@
 
 @media (max-width: 768px) {
   .applications-page {
-    .page-content {
-      .toolbar {
-        flex-direction: column;
-        gap: 16px;
-        align-items: stretch;
+    .page-header .header-content {
+      flex-direction: column;
+      align-items: stretch;
 
-        .toolbar-actions {
+      .stats {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+
+    .page-content {
+      .filter-container {
+        flex-direction: column;
+
+        .filter-btn {
+          width: 100%;
           justify-content: center;
         }
       }
 
-      .applications-table {
-        .table-header,
-        .table-body .table-row {
-          grid-template-columns: 1fr 1fr 1fr;
+      .filters-panel {
+        padding: 16px;
 
-          .col-checkbox,
-          .col-id,
-          .col-organization,
-          .col-job,
-          .col-date {
-            display: none;
+        .filters-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .filter-actions {
+          flex-direction: column;
+
+          .clear-filters-btn,
+          .close-filters-btn {
+            width: 100%;
+          }
+        }
+      }
+
+      .toolbar {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+      }
+
+      .applications-table {
+        .table-header {
+          display: none;
+        }
+
+        .table-body .table-row {
+          display: block;
+          padding: 16px;
+
+          .col {
+            display: block;
+            margin-bottom: 12px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          .col-checkbox {
+            display: inline-block;
+            margin-right: 12px;
+            margin-bottom: 8px;
+          }
+
+          .col-id {
+            display: inline-block;
+            margin-right: 12px;
+            margin-bottom: 8px;
+          }
+
+          .candidate-info {
+            margin-bottom: 12px;
+          }
+
+          .organization-info,
+          .job-info,
+          .date-info {
+            display: inline-block;
+            margin-right: 16px;
+            margin-bottom: 8px;
+          }
+
+          .status-badge {
+            margin-bottom: 12px;
+          }
+
+          .actions {
+            justify-content: flex-start;
+          }
+        }
+      }
+
+      .pagination {
+        flex-direction: column;
+        gap: 12px;
+
+        .pagination-btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .applications-page {
+    .page-content {
+      .filters-panel {
+        padding: 12px;
+      }
+
+      .applications-table .table-body .table-row {
+        padding: 12px;
+
+        .candidate-info {
+          .candidate-avatar {
+            width: 40px;
+            height: 40px;
+          }
+
+          .candidate-details h4 {
+            font-size: 13px;
+          }
+        }
+
+        .actions .action-btn {
+          width: 28px;
+          height: 28px;
+
+          svg {
+            width: 14px;
+            height: 14px;
           }
         }
       }

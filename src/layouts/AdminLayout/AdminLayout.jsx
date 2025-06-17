@@ -1,5 +1,6 @@
 "use client";
 import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import {
   LayoutDashboard,
   Briefcase,
@@ -7,6 +8,8 @@ import {
   UserCheck,
   LogOut,
   User,
+  Menu,
+  X,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../hooks/useAuth";
@@ -17,6 +20,7 @@ const AdminLayout = () => {
   const { logout, isAuthenticated } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // If not authenticated, don't render the layout
   if (!isAuthenticated) {
@@ -71,15 +75,36 @@ const AdminLayout = () => {
     handleLogout();
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleNavClick = () => {
+    closeMobileMenu();
+  };
+
   return (
     <div className="admin-layout">
-      <aside className="sidebar">
+      {/* Mobile Overlay */}
+      <div
+        className={`mobile-overlay ${isMobileMenuOpen ? "show" : ""}`}
+        onClick={closeMobileMenu}
+      />
+
+      <aside className={`sidebar ${isMobileMenuOpen ? "open" : ""}`}>
         <div className="sidebar-header">
           <div className="logo">
             <div className="logo-icon">
-              <img src={logo} alt="Jobs Logo" />
+              <img src={logo || "/placeholder.svg"} alt="Jobs Logo" />
             </div>
           </div>
+          <button className="sidebar-close-btn" onClick={closeMobileMenu}>
+            <X size={20} />
+          </button>
         </div>
 
         <nav className="sidebar-nav">
@@ -92,6 +117,7 @@ const AdminLayout = () => {
                 key={item.path}
                 to={item.path}
                 className={`nav-item ${isActive ? "active" : ""}`}
+                onClick={handleNavClick}
               >
                 <Icon size={20} />
                 <span>{item.label}</span>
@@ -111,6 +137,9 @@ const AdminLayout = () => {
       <main className="main-content">
         <header className="main-header">
           <div className="header-left">
+            <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
             <h1 className="page-title">{getPageTitle()}</h1>
           </div>
           <div className="header-right">

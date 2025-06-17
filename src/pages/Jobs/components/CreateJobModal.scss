@@ -268,18 +268,31 @@
 }
 
 @media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0;
+  }
+
   .modal-content {
     margin: 0;
     border-radius: 0;
     height: 100vh;
     max-height: 100vh;
+    width: 100vw;
+
+    .modal-header {
+      padding: 16px 20px;
+
+      h2 {
+        font-size: 18px;
+      }
+    }
 
     .job-form {
-      padding: 24px;
+      padding: 20px;
 
       .form-grid {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 20px;
       }
 
       .form-row {
@@ -287,13 +300,47 @@
         gap: 16px;
       }
 
+      .image-upload-section {
+        .image-preview,
+        .image-upload-area .image-upload-label {
+          width: 100%;
+          max-width: 300px;
+          height: 120px;
+        }
+      }
+
       .form-actions {
         flex-direction: column;
+        gap: 12px;
 
         .cancel-btn,
         .submit-btn {
           width: 100%;
         }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content .job-form {
+    padding: 16px;
+
+    .form-group {
+      margin-bottom: 16px;
+
+      input,
+      select,
+      textarea {
+        padding: 10px;
+        font-size: 16px; // Prevent zoom on iOS
+      }
+    }
+
+    .image-upload-section {
+      .image-preview,
+      .image-upload-area .image-upload-label {
+        height: 100px;
       }
     }
   }
