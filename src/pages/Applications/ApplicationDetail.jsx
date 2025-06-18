@@ -184,7 +184,7 @@ const ApplicationDetail = () => {
           className="view-profile-btn"
           onClick={() =>
             window.open(
-              `https://jobs-hr-uz.vercel.app/profile/personal-infos/${user.id}`,
+              `https://jobs-hr.uz/profile/personal-infos/${user.id}`,
               "_blank"
             )
           }

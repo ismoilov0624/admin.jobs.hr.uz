@@ -152,7 +152,7 @@ const Candidates = () => {
   const handleViewCandidate = (candidate) => {
     // Redirect to external profile URL instead of internal route
     window.open(
-      `https://jobs-hr-uz.vercel.app/profile/personal-infos/${candidate.id}`,
+      `https://jobs-hr.uz/profile/personal-infos/${candidate.id}`,
       "_blank"
     );
   };
