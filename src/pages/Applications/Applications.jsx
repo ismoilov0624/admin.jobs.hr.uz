@@ -202,7 +202,7 @@ const Applications = () => {
   };
 
   const handleViewUserProfile = (userId) => {
-    window.open(`https://hr.jobs.uz/profile/${userId}`, "_blank");
+    window.open(`https://jobs-hr.uz/profile/${userId}`, "_blank");
   };
 
   const handleStatusUpdate = (e, application, newStatus) => {

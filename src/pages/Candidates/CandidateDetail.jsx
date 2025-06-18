@@ -30,7 +30,8 @@ const CandidateDetail = () => {
     if (!avatar) return null;
     if (avatar.startsWith("http")) return avatar;
 
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || "https://api.sahifam.uz";
+    const baseUrl =
+      import.meta.env.VITE_API_BASE_URL || "https://api.sahifam.uz";
     return `${baseUrl}/uploads/${avatar}`;
   };
 
@@ -67,7 +68,7 @@ const CandidateDetail = () => {
   };
 
   const handleViewProfile = () => {
-    window.open(`https://hr.jobs.uz/profile/${id}`, "_blank");
+    window.open(`https://jobs-hr.uz/profile/${id}`, "_blank");
   };
 
   if (isLoading) {
