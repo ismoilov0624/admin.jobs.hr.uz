@@ -14,8 +14,11 @@ request.interceptors.request.use(
       config.headers["Authorization"] = `Bearer ${token}`;
     }
 
-    // Ensure Content-Type is set for POST requests
-    if (config.method === "post" && config.data) {
+    // FormData uchun Content-Type ni o'chirish
+    if (config.data instanceof FormData) {
+      // Browser o'zi Content-Type ni boundary bilan o'rnatadi
+      delete config.headers["Content-Type"];
+    } else if (config.method === "post" && config.data) {
       config.headers["Content-Type"] = "application/json";
     }
 

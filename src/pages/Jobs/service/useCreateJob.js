@@ -4,10 +4,10 @@ import { request } from "../../../config/request";
 
 const createJob = async (jobData) => {
   try {
-    // Create FormData for file upload
+    // FormData yaratish
     const formData = new FormData();
 
-    // Append all job fields to FormData
+    // Barcha fieldlarni FormData ga qo'shish
     Object.keys(jobData).forEach((key) => {
       if (
         jobData[key] !== undefined &&
@@ -15,21 +15,33 @@ const createJob = async (jobData) => {
         jobData[key] !== ""
       ) {
         if (key === "avatar" && jobData[key] instanceof File) {
-          formData.append(key, jobData[key]);
-        } else {
+          // Fayl obyektini qo'shish
+          formData.append("avatar", jobData[key]);
+        } else if (key === "avatarFilename") {
+          // Avatar filename ni alohida field sifatida qo'shish
+          formData.append("avatarFilename", jobData[key]);
+        } else if (key !== "avatar") {
+          // Boshqa fieldlar
           formData.append(key, String(jobData[key]));
         }
       }
     });
 
-    for (let [key, value] of formData.entries()) {
+    // Agar fayl yo'q bo'lsa, default avatar filename qo'shamiz
+    if (!jobData.avatar || !(jobData.avatar instanceof File)) {
+      formData.append("avatarFilename", "no-avatar-default.jpg");
     }
 
-    const response = await request.post("/jobs", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    // FormData contents ni tekshirish
+
+    for (const [key, value] of formData.entries()) {
+      if (key === "avatar" && value instanceof File) {
+      } else {
+      }
+    }
+
+    // FormData bilan jo'natish
+    const response = await request.post("/jobs", formData);
 
     return response.data;
   } catch (error) {

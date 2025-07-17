@@ -4,10 +4,7 @@ import { useForm } from "react-hook-form";
 import {
   X,
   Briefcase,
-  MapPin,
-  DollarSign,
   Calendar,
-  Users,
   Building,
   FileText,
   Upload,
@@ -19,6 +16,7 @@ import "./CreateJobModal.scss";
 const CreateJobModal = ({ isOpen, onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [avatarFilename, setAvatarFilename] = useState("");
   const { mutate: createJob, isPending } = useCreateJob();
 
   const {
@@ -53,9 +51,19 @@ const CreateJobModal = ({ isOpen, onClose }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       setSelectedImage(file);
-      setValue("avatar", file);
+
+      // Generate unique filename
+      const timestamp = Date.now();
+      const randomNum = Math.floor(Math.random() * 1000000);
+      const fileExtension = file.name.split(".").pop();
+      const generatedFilename = `job-avatar-${timestamp}-${randomNum}.${fileExtension}`;
+
+      setAvatarFilename(generatedFilename);
+      setValue("avatar", file); // File obyektini form ga qo'yamiz
+      setValue("avatarFilename", generatedFilename); // Filename ni alohida field ga qo'yamiz
 
       // Create preview
       const reader = new FileReader();
@@ -69,13 +77,16 @@ const CreateJobModal = ({ isOpen, onClose }) => {
   const removeImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
+    setAvatarFilename("");
     setValue("avatar", null);
+    setValue("avatarFilename", "");
   };
 
   const onSubmit = (data) => {
-    // Add the selected image to form data
-    if (selectedImage) {
+    // Add file and filename to data
+    if (selectedImage && avatarFilename) {
       data.avatar = selectedImage;
+      data.avatarFilename = avatarFilename;
     }
 
     createJob(data, {
@@ -89,6 +100,7 @@ const CreateJobModal = ({ isOpen, onClose }) => {
     reset();
     setSelectedImage(null);
     setImagePreview(null);
+    setAvatarFilename("");
     onClose();
   };
 
@@ -301,6 +313,11 @@ const CreateJobModal = ({ isOpen, onClose }) => {
                   >
                     <X size={16} />
                   </button>
+                  {avatarFilename && (
+                    <div className="filename-display">
+                      <small>Fayl nomi: {avatarFilename}</small>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="image-upload-area">
